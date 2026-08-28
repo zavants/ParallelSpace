@@ -29,7 +29,7 @@ public sealed class Space
     /// When Isolation == IsolatedProfile: also append
     /// <c>--user-data-dir="&lt;dataFolder&gt;"</c>. Helpful for Chromium/Electron apps.
     /// </summary>
-    public bool AppendUserDataDir { get; set; } = true;
+    public bool AppendUserDataDir { get; set; } = false;
 
     /// <summary>Free-form tag used for grouping / preset identity (e.g. "discord").</summary>
     public string Kind { get; set; } = "custom";

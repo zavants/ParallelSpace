@@ -22,6 +22,13 @@ public sealed partial class CatalogItemViewModel : ObservableObject
     /// <summary>Set for the three Discord channels; empty for ordinary presets.</summary>
     public string DiscordChannel { get; init; } = "";
 
+    /// <summary>
+    /// One space per account, so ordinary presets can be added repeatedly — each
+    /// new space gets its own private folder. A Discord channel is a single data
+    /// folder, i.e. exactly one account, so adding it twice would gain nothing.
+    /// </summary>
+    public bool AllowsMultiple => string.IsNullOrEmpty(DiscordChannel);
+
     public Action<CatalogItemViewModel>? OnActivate { get; init; }
 
     [ObservableProperty] private bool _isInstalled;
@@ -43,9 +50,10 @@ public sealed partial class CatalogItemViewModel : ObservableObject
 
     public string ActionLabel =>
         !IsInstalled ? "Get it ↗" :
-        IsAdded ? "Added" : "Add space";
+        !IsAdded ? "Add space" :
+        AllowsMultiple ? "Add another" : "Added";
 
-    public bool CanActivate => !IsAdded;
+    public bool CanActivate => !IsAdded || AllowsMultiple;
 
     [RelayCommand]
     private void Activate() => OnActivate?.Invoke(this);

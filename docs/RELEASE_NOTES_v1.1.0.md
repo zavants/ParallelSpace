@@ -41,8 +41,8 @@ choose **More info → Run anyway** if SmartScreen prompts.
 ## 🚀 Two of something in 30 seconds
 
 1. **Catalog** → **Add space** on an app marked *Installed*.
-2. **Spaces** → **Launch**. Launch it again for a second copy.
-3. Sign each copy into a different account.
+2. Want a second account? Add the same app again — the button reads **Add another** — for a second space with its own profile.
+3. **Spaces** → **Launch** each one, and sign them into different accounts.
 
 For several Discord accounts, add *Discord*, *Discord PTB* and *Discord Canary* —
 separate installs, separate accounts, no patching.

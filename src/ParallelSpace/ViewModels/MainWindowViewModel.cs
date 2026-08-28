@@ -173,9 +173,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return;
             }
 
+            // A preset can be added once per account; number the repeats.
+            var existing = Spaces.Count(sp => sp.Model.PresetKey == preset.Key);
+            var name = existing == 0 ? preset.Display : $"{preset.Display} {existing + 1}";
+
             space = new Space
             {
-                Name = preset.Display,
+                Name = name,
                 Kind = "preset",
                 PresetKey = preset.Key,
                 ExecutablePath = exe,
@@ -232,8 +236,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         MarkSelectedTheme(option.Key);
         _store.ThemeKey = option.Key;
-        Save();
-        StatusMessage = $"Theme set to {option.Name}.";
+        if (Save())
+            StatusMessage = $"Theme set to {option.Name}.";
     }
 
     private void MarkSelectedTheme(string key)
@@ -284,7 +288,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             ExecutablePath = exePath ?? "",
             Kind = "custom",
             Isolation = IsolationMode.IsolatedProfile,
-            AppendUserDataDir = true,
+            AppendUserDataDir = false,   // opt-in: plain Win32 apps treat it as a file to open
             Glyph = "📦",
             Accent = "#4F5BD5",
         };
@@ -394,10 +398,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    private void Save()
+    private bool Save()
     {
-        if (!_store.Save(Spaces.Select(s => s.Model)))
-            StatusMessage = "Couldn't write spaces.json — your changes may not persist.";
+        if (_store.Save(Spaces.Select(s => s.Model)))
+            return true;
+
+        StatusMessage = "Couldn't write spaces.json — your changes may not persist.";
+        return false;
     }
 
     private void OpenUrl(string url)

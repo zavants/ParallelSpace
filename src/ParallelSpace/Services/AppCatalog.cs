@@ -16,7 +16,6 @@ namespace ParallelSpace.Services;
 /// </summary>
 public static class AppCatalog
 {
-    private static string Env(string name) => Environment.GetEnvironmentVariable(name) ?? "";
     private static string Local => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     private static string Roaming => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     private static string Programs => Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
@@ -98,8 +97,8 @@ public static class AppCatalog
 
         new("slack", "Slack", "Chat",
             [Path.Combine(Local, "slack", "slack.exe")],
-            "", MultiTechnique.IsolatedProfile, "💼", "#4A154B",
-            "Launched with a redirected profile. Slack also supports several workspaces natively.",
+            "--user-data-dir=\"{DATA}\"", MultiTechnique.ProfileFlag, "💼", "#4A154B",
+            "Electron honours --user-data-dir, which also re-keys Slack's single-instance lock.",
             "https://slack.com/downloads/windows")
             { SquirrelLayout = true },
 
@@ -116,8 +115,8 @@ public static class AppCatalog
 
         new("obsidian", "Obsidian", "Tools",
             [Path.Combine(Local, "Obsidian", "Obsidian.exe")],
-            "", MultiTechnique.IsolatedProfile, "🗂️", "#7C3AED",
-            "Launched with a redirected profile so each copy keeps its own vault list.",
+            "--user-data-dir=\"{DATA}\"", MultiTechnique.ProfileFlag, "🗂️", "#7C3AED",
+            "Electron honours --user-data-dir, so each copy keeps its own vault list and settings.",
             "https://obsidian.md/download"),
 
         new("qbittorrent", "qBittorrent", "Tools",

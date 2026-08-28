@@ -32,7 +32,6 @@
             <SolidColorBrush x:Key="NavHoverBrush" Color="#26282E" />
             <SolidColorBrush x:Key="TileBrush" Color="#33353C" />
             <SolidColorBrush x:Key="FaintTextBrush" Color="#6E747F" />
-            <SolidColorBrush x:Key="BorderBrush" Color="#464951" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,6 +12,9 @@ public sealed partial class EditSpaceViewModel : ObservableObject
 {
     public Space Model { get; }
     public bool IsExisting { get; }
+
+    /// <summary>The path the editor opened with, to detect a deliberate repoint.</summary>
+    private readonly string _originalExecutablePath;
     public bool IsDiscord { get; }
     public string Title => IsExisting ? "Edit space" : "Add a space";
 
@@ -19,11 +23,12 @@ public sealed partial class EditSpaceViewModel : ObservableObject
         Model = model;
         IsExisting = isExisting;
         IsDiscord = !string.IsNullOrEmpty(model.DiscordChannel);
+        _originalExecutablePath = model.ExecutablePath ?? "";
 
         _name = model.Name;
-        _executablePath = model.ExecutablePath;
-        _arguments = model.Arguments;
-        _workingDirectory = model.WorkingDirectory;
+        _executablePath = model.ExecutablePath ?? "";
+        _arguments = model.Arguments ?? "";
+        _workingDirectory = model.WorkingDirectory ?? "";
         _isolatedProfile = model.Isolation == IsolationMode.IsolatedProfile;
         _appendUserDataDir = model.AppendUserDataDir;
         _glyph = string.IsNullOrEmpty(model.Glyph) ? "📦" : model.Glyph;
@@ -68,7 +73,19 @@ public sealed partial class EditSpaceViewModel : ObservableObject
 
         if (!IsDiscord)
         {
-            Model.ExecutablePath = ExecutablePath.Trim();
+            var exe = ExecutablePath.Trim();
+
+            // Pointing a catalog space at a different program makes it a plain
+            // custom space — otherwise Launch would keep re-resolving the preset
+            // and silently ignore what was typed here.
+            if (!string.IsNullOrEmpty(Model.PresetKey) &&
+                !string.Equals(exe, _originalExecutablePath, StringComparison.OrdinalIgnoreCase))
+            {
+                Model.PresetKey = "";
+                Model.Kind = "custom";
+            }
+
+            Model.ExecutablePath = exe;
             Model.Arguments = Arguments?.Trim() ?? "";
             Model.WorkingDirectory = WorkingDirectory?.Trim() ?? "";
             Model.Isolation = IsolatedProfile ? IsolationMode.IsolatedProfile : IsolationMode.None;

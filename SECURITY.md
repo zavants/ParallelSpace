@@ -9,7 +9,9 @@ starts other programs on your behalf:
   `asInvoker`.
 - **It starts programs you configure**, with arguments you can see and edit, and puts
   each launch in a Windows job object so it can report status and close that copy's
-  process tree — and nothing outside it.
+  process tree — and nothing outside it. The one exception is a Discord channel
+  space, which is closed by process image name and therefore ends every running
+  copy of that channel, including one started outside Parallel Space.
 - **It redirects environment variables** (`USERPROFILE`, `APPDATA`, `LOCALAPPDATA`,
   `TEMP`) for spaces set to "isolated profile", so the copy reads and writes inside
   `%APPDATA%\ParallelSpace\Spaces\<id>`.

@@ -30,10 +30,10 @@ copy needs a different trick **per app**, and that is the whole idea here:
 
 | Technique | How it works | Apps |
 |---|---|---|
-| **Profile flag** | The app takes a flag that relocates its entire profile. Most reliable. | Chrome, Edge, Brave, Firefox, Signal, Element, VS Code, qBittorrent, Thunderbird |
+| **Profile flag** | The app takes a flag that relocates its entire profile. Most reliable. | Chrome, Edge, Brave, Firefox, Signal, Element, Slack, VS Code, Obsidian, qBittorrent, Thunderbird |
 | **Multi-instance flag** | A flag permits a second instance, plus one for its data. | Telegram Desktop |
 | **Separate builds** | The vendor ships parallel builds that each keep their own account. | Discord Stable / PTB / Canary |
-| **Isolated profile** | No flag — the copy is launched with its environment redirected into a private folder. | Slack, Obsidian, portable apps, anything you add yourself |
+| **Isolated profile** | No flag — the copy is launched with its environment redirected into a private folder. | Portable apps and anything you add yourself |
 
 Parallel Space keeps a **catalog** of these recipes, detects which of them you have
 installed, and adds them as one-click "spaces". Anything not in the catalog you can
@@ -88,7 +88,13 @@ run — choose **More info → Run anyway**.
 ## Using it
 
 **Catalog → Add space** on anything marked *Installed*, then **Launch** it from
-Spaces. Launch it twice for two copies; sign each into a different account.
+Spaces. For a second account, add the same app again — the button becomes **Add
+another** — which creates a second space with its own private folder. Launch both
+and sign each into a different account.
+
+(Adding it twice is what gives you two profiles. Pressing Launch twice on *one*
+space just reuses that space's folder, so the app's own single-instance handling
+takes over.)
 
 For an app that isn't in the catalog, **+ Add app…** on the Spaces page, or click it
 in the *Detected on this PC* strip. Choose **Isolated profile** unless the app has
@@ -119,6 +125,10 @@ app escapes the job, the space reports "Stopped", and Close does nothing.
 Because each copy has its own job, **Close** terminates that copy's whole process
 tree and nothing outside it. The job carries no kill-on-close limit, so quitting
 Parallel Space leaves your apps running.
+
+**One exception:** Discord channel spaces are tracked and closed by process image
+name, because a channel is a single install that may already be running from
+outside Parallel Space. Closing one ends every running copy of that channel.
 
 ---
 
@@ -159,6 +169,7 @@ src/ParallelSpace/
 tools/
   IconGen/       draws the app icon + logo
   Harness/       headless check of the service layer
+  StubApp/       test fixture: a launcher stub that spawns a child and exits
   build.ps1 / run.ps1 / package.ps1
 ```
 

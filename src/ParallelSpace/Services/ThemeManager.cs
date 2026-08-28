@@ -52,8 +52,7 @@ public static class ThemeManager
         r["SubtleHoverBrush"] = new SolidColorBrush(Mix(cardHover, text, 0.14));
         r["NavHoverBrush"] = new SolidColorBrush(Mix(panel, text, 0.07));
         r["TileBrush"] = new SolidColorBrush(Mix(card, text, 0.10));
-        r["FaintTextBrush"] = new SolidColorBrush(Mix(muted, panel, 0.40));
-        r["BorderBrush"] = new SolidColorBrush(Mix(card, text, 0.20));
+        r["FaintTextBrush"] = new SolidColorBrush(Mix(muted, panel, 0.08));
 
         // Let Fluent's own controls (text boxes, checkboxes, scrollbars) match.
         app.RequestedThemeVariant = theme.IsLight ? ThemeVariant.Light : ThemeVariant.Dark;

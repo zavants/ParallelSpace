@@ -4,7 +4,7 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/).
 
-## [1.1.0] — 2026-08-17
+## [1.1.0] — 2026-08-28
 
 Parallel Space became a general multi-app tool rather than a Discord one.
 

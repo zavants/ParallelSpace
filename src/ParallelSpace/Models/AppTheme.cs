@@ -37,7 +37,7 @@ public static class AppThemes
 
         new("nord", "Nord", "Cool desaturated blue-grey with icy highlights", false,
             "#262B33", "#2E3440", "#3B4252", "#454E60",
-            "#4C6E96", "#3E5C80", "#ECEFF4", "#A9B4C6", "#5A9E6F", "#D08F42"),
+            "#4C6E96", "#3E5C80", "#ECEFF4", "#B8C2D2", "#5A9E6F", "#D08F42"),
 
         new("carbon", "Carbon", "Near-black, high contrast, crisp separations", false,
             "#000000", "#0B0B0C", "#16171A", "#24262A",
