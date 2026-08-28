@@ -1,0 +1,182 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ParallelSpace.ViewModels"
+        x:Class="ParallelSpace.Views.EditSpaceWindow"
+        x:DataType="vm:EditSpaceViewModel"
+        Width="500" SizeToContent="Height"
+        MinHeight="300"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="/Assets/appicon.ico"
+        Title="{Binding Title}">
+
+    <Window.Styles>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="15,9" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleBrush}" />
+        </Style>
+        <Style Selector="Button.subtle">
+            <Setter Property="Background" Value="{DynamicResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Padding" Value="12,9" />
+            <Setter Property="CornerRadius" Value="7" />
+        </Style>
+        <Style Selector="Button.subtle:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleHoverBrush}" />
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+        <Style Selector="Button.glyph">
+            <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.glyph:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleHoverBrush}" />
+        </Style>
+        <Style Selector="Button.swatch">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <!-- Keep the swatch's own colour on hover; show the affordance on the ring. -->
+        <Style Selector="Button.swatch:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TextBrush}" />
+        </Style>
+    </Window.Styles>
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+
+            <!-- Header + live preview -->
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Width="52" Height="52" CornerRadius="12" Background="{Binding Accent}">
+                    <TextBlock Text="{Binding Glyph}" FontSize="26"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding Title}" FontSize="19" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
+                    <TextBlock Text="{Binding Name}" FontSize="12.5"
+                               Foreground="{DynamicResource MutedTextBrush}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Name -->
+            <StackPanel>
+                <TextBlock Text="Name" Classes="label" />
+                <TextBox Text="{Binding Name}" Watermark="e.g. Discord — Alt" />
+            </StackPanel>
+
+            <!-- Executable (custom only) -->
+            <StackPanel IsVisible="{Binding !IsDiscord}">
+                <TextBlock Text="Program (.exe)" Classes="label" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Grid.Column="0" Text="{Binding ExecutablePath}" Watermark="Path to an executable" />
+                    <Button Grid.Column="1" Classes="subtle" Content="Browse…" Margin="8,0,0,0"
+                            Click="OnBrowseExe" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Arguments (custom only) -->
+            <StackPanel IsVisible="{Binding !IsDiscord}">
+                <TextBlock Text="Arguments (optional) — {DATA} means this space's private folder" Classes="label" />
+                <TextBox Text="{Binding Arguments}" Watermark="e.g. --user-data-dir=&quot;{DATA}&quot;" />
+            </StackPanel>
+
+            <!-- Working dir (custom only) -->
+            <StackPanel IsVisible="{Binding !IsDiscord}">
+                <TextBlock Text="Working folder (optional)" Classes="label" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Grid.Column="0" Text="{Binding WorkingDirectory}" Watermark="Defaults to the program's folder" />
+                    <Button Grid.Column="1" Classes="subtle" Content="Browse…" Margin="8,0,0,0"
+                            Click="OnBrowseWorkDir" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Isolation (custom only) -->
+            <Border IsVisible="{Binding !IsDiscord}" Background="{DynamicResource PanelBrush}"
+                    CornerRadius="9" Padding="14">
+                <StackPanel Spacing="8">
+                    <CheckBox IsChecked="{Binding IsolatedProfile}">
+                        <StackPanel Spacing="1">
+                            <TextBlock Text="Isolated profile" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" />
+                            <TextBlock Text="Redirect the app's data into a private folder for this space."
+                                       FontSize="11.5" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding AppendUserDataDir}" IsEnabled="{Binding IsolatedProfile}"
+                              Margin="24,0,0,0">
+                        <StackPanel Spacing="1">
+                            <TextBlock Text="Append --user-data-dir" Foreground="{DynamicResource TextBrush}" />
+                            <TextBlock Text="Helps Chromium / Electron apps. Leave off for apps that reject unknown flags."
+                                       FontSize="11.5" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Glyph -->
+            <StackPanel>
+                <TextBlock Text="Icon" Classes="label" />
+                <ItemsControl ItemsSource="{Binding GlyphChoices}" x:CompileBindings="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Classes="glyph" Content="{Binding}" Margin="0,0,7,7"
+                                    Command="{Binding $parent[ItemsControl].DataContext.SelectGlyphCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Accent -->
+            <StackPanel>
+                <TextBlock Text="Color" Classes="label" />
+                <ItemsControl ItemsSource="{Binding AccentChoices}" x:CompileBindings="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Classes="swatch" Background="{Binding}" Margin="0,0,8,0"
+                                    Command="{Binding $parent[ItemsControl].DataContext.SelectAccentCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Actions -->
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,6,0,0">
+                <Button Grid.Column="1" Classes="subtle" Content="Cancel" Margin="0,0,10,0"
+                        Click="OnCancel" />
+                <Button Grid.Column="2" Classes="primary" Content="Save"
+                        IsEnabled="{Binding CanSave}" Click="OnSave" />
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

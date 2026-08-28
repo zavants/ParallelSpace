@@ -1,0 +1,65 @@
+name: Bug report
+description: Something behaved incorrectly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you expect, and what did you get instead?
+    validations:
+      required: true
+
+  - type: input
+    id: app
+    attributes:
+      label: Which app were you cloning
+      placeholder: e.g. Firefox 130, or "a custom .exe"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: technique
+    attributes:
+      label: What did the space card say under its name
+      options:
+        - Profile flag
+        - Multi-instance flag
+        - Separate build
+        - Isolated profile
+        - Something else / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Catalog -> Add space on ...
+        2. Launch
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Parallel Space version
+      placeholder: shown at the bottom of the sidebar, e.g. v1.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: e.g. Windows 11 24H2
+    validations:
+      required: true
+
+  - type: textarea
+    id: status
+    attributes:
+      label: Status bar message
+      description: The line at the bottom of the window, if it showed anything.

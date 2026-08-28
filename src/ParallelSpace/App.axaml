@@ -1,0 +1,38 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ParallelSpace.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <!--
+        Startup defaults (the "midnight" theme). ThemeManager replaces every one
+        of these at launch and whenever the user picks another theme; the views
+        bind them with DynamicResource so the swap repaints live.
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="AccentColor">#4F5BD5</Color>
+            <SolidColorBrush x:Key="AccentBrush" Color="#4F5BD5" />
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#414CBE" />
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#131417" />
+            <SolidColorBrush x:Key="PanelBrush" Color="#1B1D22" />
+            <SolidColorBrush x:Key="CardBrush" Color="#24262D" />
+            <SolidColorBrush x:Key="CardHoverBrush" Color="#2E313A" />
+            <SolidColorBrush x:Key="TextBrush" Color="#F4F5F7" />
+            <SolidColorBrush x:Key="MutedTextBrush" Color="#A3A9B8" />
+            <SolidColorBrush x:Key="OkBrush" Color="#3BA55D" />
+            <SolidColorBrush x:Key="WarnBrush" Color="#E0A32E" />
+
+            <!-- Derived by ThemeManager; these are the midnight equivalents. -->
+            <SolidColorBrush x:Key="SubtleBrush" Color="#2E313A" />
+            <SolidColorBrush x:Key="SubtleHoverBrush" Color="#434750" />
+            <SolidColorBrush x:Key="NavHoverBrush" Color="#26282E" />
+            <SolidColorBrush x:Key="TileBrush" Color="#33353C" />
+            <SolidColorBrush x:Key="FaintTextBrush" Color="#6E747F" />
+            <SolidColorBrush x:Key="BorderBrush" Color="#464951" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

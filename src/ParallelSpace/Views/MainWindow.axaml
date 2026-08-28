@@ -1,0 +1,511 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ParallelSpace.ViewModels"
+        x:Class="ParallelSpace.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1040" Height="740"
+        MinWidth="880" MinHeight="560"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="/Assets/appicon.ico"
+        Title="Parallel Space">
+
+    <Window.Styles>
+        <!-- Primary button -->
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="15,9" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleBrush}" />
+        </Style>
+
+        <!-- Subtle button -->
+        <Style Selector="Button.subtle">
+            <Setter Property="Background" Value="{DynamicResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style Selector="Button.subtle:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleHoverBrush}" />
+        </Style>
+
+        <!-- Detected-app chip -->
+        <Style Selector="Button.chip">
+            <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Padding" Value="11,7" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+        <Style Selector="Button.chip:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SubtleHoverBrush}" />
+        </Style>
+
+        <!-- Sidebar nav item -->
+        <Style Selector="Button.nav">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Margin" Value="0,2" />
+        </Style>
+        <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource NavHoverBrush}" />
+        </Style>
+        <Style Selector="Button.nav.selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+        </Style>
+        <Style Selector="Button.nav TextBlock.navlabel">
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+        </Style>
+        <Style Selector="Button.nav.selected TextBlock.navlabel">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        </Style>
+
+        <!-- Status dot -->
+        <Style Selector="Ellipse.dot">
+            <Setter Property="Fill" Value="{DynamicResource MutedTextBrush}" />
+        </Style>
+        <Style Selector="Ellipse.dot.on">
+            <Setter Property="Fill" Value="{DynamicResource OkBrush}" />
+        </Style>
+
+        <!-- Cards -->
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Border.card:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource SubtleHoverBrush}" />
+        </Style>
+        <Style Selector="Border.card.selected">
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+        </Style>
+
+        <!-- Small pill label (technique / category) -->
+        <Style Selector="Border.pill">
+            <Setter Property="Background" Value="{DynamicResource SubtleBrush}" />
+            <Setter Property="CornerRadius" Value="9" />
+            <Setter Property="Padding" Value="8,2" />
+        </Style>
+
+        <!-- Page headings -->
+        <Style Selector="TextBlock.h1">
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        </Style>
+        <Style Selector="TextBlock.sub">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto">
+
+        <Grid Grid.Row="0" ColumnDefinitions="230,*">
+
+            <!-- ================= Sidebar ================= -->
+            <Border Grid.Column="0" Background="{DynamicResource PanelBrush}" Padding="14,18">
+                <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+                    <!-- Brand -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="4,0,0,20">
+                        <Image Source="/Assets/logo.png" Width="34" Height="34" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Parallel Space" FontSize="15" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextBrush}" />
+                            <TextBlock Text="Run apps in parallel" FontSize="11"
+                                       Foreground="{DynamicResource MutedTextBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Nav -->
+                    <StackPanel Grid.Row="1" Spacing="0">
+                        <TextBlock Text="MENU" FontSize="10.5" FontWeight="SemiBold" Margin="8,0,0,6"
+                                   Foreground="{DynamicResource FaintTextBrush}" />
+
+                        <Button Classes="nav" Classes.selected="{Binding IsSpacesPage}"
+                                AutomationProperties.Name="Spaces"
+                                Command="{Binding ShowSpacesCommand}">
+                            <Grid ColumnDefinitions="3,Auto,*,Auto" Height="38">
+                                <Border Grid.Column="0" Width="3" CornerRadius="2" Margin="0,7"
+                                        Background="{DynamicResource AccentBrush}"
+                                        IsVisible="{Binding IsSpacesPage}" />
+                                <TextBlock Grid.Column="1" Text="▦" FontSize="15" Margin="11,0,10,0"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                                <TextBlock Grid.Column="2" Text="Spaces" FontSize="13.5" FontWeight="Medium"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                                <Border Grid.Column="3" IsVisible="{Binding HasSpaces}" Margin="0,0,10,0"
+                                        Background="{DynamicResource SubtleBrush}" CornerRadius="9"
+                                        Padding="7,1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding SpaceCount}" FontSize="11"
+                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                </Border>
+                            </Grid>
+                        </Button>
+
+                        <Button Classes="nav" Classes.selected="{Binding IsCatalogPage}"
+                                AutomationProperties.Name="Catalog"
+                                Command="{Binding ShowCatalogCommand}">
+                            <Grid ColumnDefinitions="3,Auto,*" Height="38">
+                                <Border Grid.Column="0" Width="3" CornerRadius="2" Margin="0,7"
+                                        Background="{DynamicResource AccentBrush}"
+                                        IsVisible="{Binding IsCatalogPage}" />
+                                <TextBlock Grid.Column="1" Text="◈" FontSize="15" Margin="11,0,10,0"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                                <TextBlock Grid.Column="2" Text="Catalog" FontSize="13.5" FontWeight="Medium"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                            </Grid>
+                        </Button>
+
+                        <Button Classes="nav" Classes.selected="{Binding IsAppearancePage}"
+                                AutomationProperties.Name="Appearance"
+                                Command="{Binding ShowAppearanceCommand}">
+                            <Grid ColumnDefinitions="3,Auto,*" Height="38">
+                                <Border Grid.Column="0" Width="3" CornerRadius="2" Margin="0,7"
+                                        Background="{DynamicResource AccentBrush}"
+                                        IsVisible="{Binding IsAppearancePage}" />
+                                <TextBlock Grid.Column="1" Text="◐" FontSize="15" Margin="11,0,10,0"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                                <TextBlock Grid.Column="2" Text="Appearance" FontSize="13.5" FontWeight="Medium"
+                                           VerticalAlignment="Center" Classes="navlabel" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Spacing="2" Margin="8,0,0,0">
+                        <TextBlock Text="v1.1.0" FontSize="11" Foreground="{DynamicResource FaintTextBrush}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ================= Content ================= -->
+            <Panel Grid.Column="1">
+
+                <!-- Spaces page -->
+                <Grid IsVisible="{Binding IsSpacesPage}" RowDefinitions="Auto,Auto,*" Margin="26,22,26,10">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+                        <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Spaces" Classes="h1" />
+                            <TextBlock Classes="sub"
+                                       Text="Isolated copies of your apps — launch each with its own profile." />
+                        </StackPanel>
+                        <Button Grid.Column="1" Classes="primary" Content="+ Add app…"
+                                VerticalAlignment="Center" Command="{Binding AddNewCommand}" />
+                    </Grid>
+
+                    <!-- Detected apps quick-add strip -->
+                    <Border Grid.Row="1" IsVisible="{Binding HasDetectedApps}" Margin="0,0,0,14"
+                            Background="{DynamicResource PanelBrush}" CornerRadius="10" Padding="13,11">
+                        <StackPanel Spacing="9">
+                            <TextBlock Text="DETECTED ON THIS PC — click to add one as a space" FontSize="10.5"
+                                       FontWeight="SemiBold" Foreground="{DynamicResource FaintTextBrush}" />
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding DetectedApps}" x:CompileBindings="False">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="8" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Classes="chip"
+                                                    Command="{Binding $parent[ItemsControl].DataContext.AddDetectedAppCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="{Binding ExePath}">
+                                                <StackPanel Orientation="Horizontal" Spacing="7">
+                                                    <TextBlock Text="＋" FontSize="13"
+                                                               Foreground="{DynamicResource MutedTextBrush}"
+                                                               VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" FontSize="12.5"
+                                                               VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <ScrollViewer Grid.Row="2">
+                        <Panel>
+                            <!-- Empty state -->
+                            <Border IsVisible="{Binding !HasSpaces}" Margin="0,40,0,0"
+                                    HorizontalAlignment="Center" VerticalAlignment="Top"
+                                    MaxWidth="460" Padding="34,40" CornerRadius="14"
+                                    Background="{DynamicResource PanelBrush}">
+                                <StackPanel Spacing="12" HorizontalAlignment="Center">
+                                    <Image Source="/Assets/logo.png" Width="60" Height="60"
+                                           HorizontalAlignment="Center" />
+                                    <TextBlock Text="No spaces yet" FontSize="18" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextBrush}"
+                                               HorizontalAlignment="Center" />
+                                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="13"
+                                               Foreground="{DynamicResource MutedTextBrush}"
+                                               Text="Pick a ready-made recipe from the Catalog, or add any program yourself with “+ Add app…”." />
+                                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"
+                                                Margin="0,4,0,0">
+                                        <Button Classes="primary" Content="Browse the catalog"
+                                                Command="{Binding ShowCatalogCommand}" />
+                                        <Button Classes="subtle" Content="+ Add app…"
+                                                Command="{Binding AddNewCommand}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <ItemsControl ItemsSource="{Binding Spaces}" IsVisible="{Binding HasSpaces}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SpaceViewModel">
+                                        <Border Classes="card" Width="290" Margin="0,0,14,14"
+                                                CornerRadius="11" ClipToBounds="True">
+                                            <Grid ColumnDefinitions="4,*">
+                                                <Border Grid.Column="0" Background="{Binding Accent}" />
+                                                <StackPanel Grid.Column="1" Margin="15" Spacing="13">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="9"
+                                                                Background="{DynamicResource TileBrush}" Margin="0,0,12,0">
+                                                            <TextBlock Text="{Binding Glyph}" FontSize="22"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                                            <TextBlock Text="{Binding Name}" FontSize="15"
+                                                                       FontWeight="SemiBold"
+                                                                       Foreground="{DynamicResource TextBrush}"
+                                                                       TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Text="{Binding Subtitle}" FontSize="12"
+                                                                       Foreground="{DynamicResource MutedTextBrush}"
+                                                                       TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                                    Spacing="6" VerticalAlignment="Top">
+                                                            <Button Classes="subtle" Content="✎" Padding="8,4"
+                                                                    ToolTip.Tip="Edit this space"
+                                                                    Command="{Binding EditCommand}" />
+                                                            <Button Classes="subtle" Content="✕" Padding="8,4"
+                                                                    ToolTip.Tip="Remove from list (keeps data)"
+                                                                    Command="{Binding RemoveCommand}" />
+                                                        </StackPanel>
+                                                    </Grid>
+
+                                                    <StackPanel Orientation="Horizontal" Spacing="7"
+                                                                VerticalAlignment="Center">
+                                                        <Ellipse Width="9" Height="9" Classes="dot"
+                                                                 Classes.on="{Binding IsRunning}" />
+                                                        <TextBlock Text="{Binding StatusText}" FontSize="12"
+                                                                   Foreground="{DynamicResource MutedTextBrush}" />
+                                                    </StackPanel>
+
+                                                    <Grid ColumnDefinitions="*,*,Auto">
+                                                        <Button Grid.Column="0" Classes="primary" Content="Launch"
+                                                                Margin="0,0,8,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                HorizontalContentAlignment="Center"
+                                                                Command="{Binding LaunchCommand}" />
+                                                        <Button Grid.Column="1" Classes="subtle" Content="Close"
+                                                                Margin="0,0,8,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                HorizontalContentAlignment="Center"
+                                                                Command="{Binding CloseCommand}" />
+                                                        <Button Grid.Column="2" Classes="subtle" Content="📂"
+                                                                ToolTip.Tip="Open this space's data folder"
+                                                                Command="{Binding OpenDataFolderCommand}" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Panel>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- Catalog page -->
+                <Grid IsVisible="{Binding IsCatalogPage}" RowDefinitions="Auto,*" Margin="26,22,26,10">
+                    <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+                        <TextBlock Text="Catalog" Classes="h1" />
+                        <TextBlock TextWrapping="Wrap" MaxWidth="680" Classes="sub"
+                                   Text="Ready-made recipes. Every app needs a different trick to run twice, so each entry carries the one that works for it — a profile flag, a second instance flag, or separate builds. Installed apps can be added in one click." />
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Catalog}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CatalogItemViewModel">
+                                    <Border Classes="card" Width="310" Margin="0,0,14,14" Padding="16"
+                                            CornerRadius="11">
+                                        <StackPanel Spacing="12">
+                                            <Grid ColumnDefinitions="Auto,*">
+                                                <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10"
+                                                        Background="{Binding Accent}" Margin="0,0,12,0">
+                                                    <TextBlock Text="{Binding Glyph}" FontSize="21"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                                    <TextBlock Text="{Binding Display}" FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextBrush}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding StatusLine}" FontSize="12"
+                                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <TextBlock Text="{Binding Note}" FontSize="12" TextWrapping="Wrap"
+                                                       Height="52"
+                                                       Foreground="{DynamicResource MutedTextBrush}" />
+
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Border Classes="pill">
+                                                    <TextBlock Text="{Binding Category}" FontSize="10.5"
+                                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                                </Border>
+                                                <Border Classes="pill">
+                                                    <TextBlock Text="{Binding TechniqueLabel}" FontSize="10.5"
+                                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                                </Border>
+                                            </StackPanel>
+
+                                            <Button Classes="primary" HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Center"
+                                                    Content="{Binding ActionLabel}"
+                                                    IsEnabled="{Binding CanActivate}"
+                                                    Command="{Binding ActivateCommand}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- Appearance page -->
+                <Grid IsVisible="{Binding IsAppearancePage}" RowDefinitions="Auto,*" Margin="26,22,26,10">
+                    <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+                        <TextBlock Text="Appearance" Classes="h1" />
+                        <TextBlock TextWrapping="Wrap" MaxWidth="680" Classes="sub"
+                                   Text="Six themes, all checked for contrast. Pick one and the whole app repaints instantly." />
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Themes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ThemeOptionViewModel">
+                                    <Border Classes="card" Width="300" Margin="0,0,14,14" Padding="0"
+                                            CornerRadius="11" ClipToBounds="True"
+                                            BorderThickness="2"
+                                            Classes.selected="{Binding IsSelected}">
+                                        <StackPanel>
+                                            <!-- Mini window preview painted in the theme's own colours -->
+                                            <Border Background="{Binding AppBackground}" Height="104">
+                                                <Grid ColumnDefinitions="62,*" Margin="10">
+                                                    <Border Grid.Column="0" Background="{Binding Panel}"
+                                                            CornerRadius="6" Margin="0,0,8,0">
+                                                        <StackPanel Margin="7,8" Spacing="5">
+                                                            <Border Height="6" Width="30" CornerRadius="3"
+                                                                    Background="{Binding Accent}"
+                                                                    HorizontalAlignment="Left" />
+                                                            <Border Height="5" Width="38" CornerRadius="3"
+                                                                    Background="{Binding Text}" Opacity="0.5"
+                                                                    HorizontalAlignment="Left" />
+                                                            <Border Height="5" Width="34" CornerRadius="3"
+                                                                    Background="{Binding Text}" Opacity="0.3"
+                                                                    HorizontalAlignment="Left" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <StackPanel Grid.Column="1" Spacing="6">
+                                                        <Border Background="{Binding Card}" CornerRadius="6"
+                                                                Height="36" Padding="8,0">
+                                                            <StackPanel Orientation="Horizontal" Spacing="7"
+                                                                        VerticalAlignment="Center">
+                                                                <Ellipse Width="7" Height="7" Fill="{Binding Ok}" />
+                                                                <Border Height="6" Width="70" CornerRadius="3"
+                                                                        Background="{Binding Text}" Opacity="0.55" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Background="{Binding Card}" CornerRadius="6"
+                                                                Height="36" Padding="8,0">
+                                                            <StackPanel Orientation="Horizontal" Spacing="7"
+                                                                        VerticalAlignment="Center">
+                                                                <Border Width="34" Height="14" CornerRadius="4"
+                                                                        Background="{Binding Accent}" />
+                                                                <Border Height="6" Width="50" CornerRadius="3"
+                                                                        Background="{Binding Text}" Opacity="0.35" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+
+                                            <StackPanel Margin="16" Spacing="11">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <StackPanel Grid.Column="0" Spacing="2">
+                                                        <TextBlock Text="{Binding Name}" FontSize="15"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="{DynamicResource TextBrush}" />
+                                                        <TextBlock Text="{Binding Blurb}" FontSize="12"
+                                                                   TextWrapping="Wrap"
+                                                                   Foreground="{DynamicResource MutedTextBrush}" />
+                                                    </StackPanel>
+                                                    <Border Grid.Column="1" Classes="pill" VerticalAlignment="Top">
+                                                        <TextBlock Text="{Binding Kind}" FontSize="10.5"
+                                                                   Foreground="{DynamicResource MutedTextBrush}" />
+                                                    </Border>
+                                                </Grid>
+
+                                                <Button Classes="primary" HorizontalAlignment="Stretch"
+                                                        HorizontalContentAlignment="Center"
+                                                        IsVisible="{Binding !IsSelected}"
+                                                        Content="Use this theme"
+                                                        Command="{Binding ActivateCommand}" />
+                                                <Button Classes="subtle" HorizontalAlignment="Stretch"
+                                                        HorizontalContentAlignment="Center"
+                                                        IsVisible="{Binding IsSelected}"
+                                                        IsEnabled="False" Content="✓ Current theme" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Panel>
+        </Grid>
+
+        <!-- Status bar -->
+        <Border Grid.Row="1" Background="{DynamicResource PanelBrush}" Padding="26,10">
+            <TextBlock Text="{Binding StatusMessage}" FontSize="12"
+                       Foreground="{DynamicResource MutedTextBrush}" TextTrimming="CharacterEllipsis" />
+        </Border>
+    </Grid>
+</Window>

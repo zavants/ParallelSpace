@@ -1,0 +1,51 @@
+name: App recipe request
+description: Ask for an app to be added to the catalog
+labels: [catalog]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every app needs a different trick to run twice. The more of the boxes below
+        you can fill in, the faster this gets added — and if you have tested a recipe
+        yourself, a PR against `AppCatalog.cs` is very welcome (see CONTRIBUTING.md).
+
+  - type: input
+    id: app
+    attributes:
+      label: App name
+      placeholder: e.g. Spotify
+    validations:
+      required: true
+
+  - type: input
+    id: path
+    attributes:
+      label: Where it installs
+      placeholder: e.g. %APPDATA%\Spotify\Spotify.exe
+    validations:
+      required: true
+
+  - type: dropdown
+    id: technique
+    attributes:
+      label: How does it support a second copy, if you know
+      options:
+        - It has a profile / user-data flag
+        - It has a flag that allows a second instance
+        - It ships separate builds or channels
+        - No flag that I know of
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: flag
+    attributes:
+      label: The flag, if there is one
+      placeholder: e.g. --user-data-dir="{DATA}"
+
+  - type: textarea
+    id: tested
+    attributes:
+      label: Have you tested it
+      description: If yes, say what you ran and what happened. Untested recipes won't be merged.

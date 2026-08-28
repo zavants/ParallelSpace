@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (windows-latest)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore ParallelSpace.sln
+
+      - name: Build
+        run: dotnet build ParallelSpace.sln -c Release --no-restore
+
+      - name: Publish self-contained exe
+        run: >
+          dotnet publish src/ParallelSpace/ParallelSpace.csproj
+          -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=none
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ParallelSpace-win-x64
+          path: src/ParallelSpace/bin/Release/net9.0-windows/win-x64/publish/ParallelSpace.exe
+          if-no-files-found: error
